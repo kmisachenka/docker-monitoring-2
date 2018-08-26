@@ -12,37 +12,28 @@ services:
     extends:
       file: docker-compose.yml
       service: master-cadvisor
+    ports:
+    - ${CADVISOR_HOST_PORT:-8080}::8080
 
   prometheus:
     extends:
       file: docker-compose.yml
       service: prometheus
-    environment:
-      - VIRTUAL_HOST=prometheus.${DOMAIN}
-      - LETSENCRYPT_HOST=prometheus.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
+    ports:
+    - ${PROMETHEUS_HOST_PORT:-9090}:9090
 
   grafana:
     extends:
       file: docker-compose.yml
       service: grafana
+    ports:
+    - ${GRAFANA_HOST_PORT:-3000}:3000
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${PASSWORD}
-      - VIRTUAL_HOST=grafana.${DOMAIN}
-      - LETSENCRYPT_HOST=grafana.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
+    - GF_SECURITY_ADMIN_PASSWORD=admin
 
   alertmanager:
     extends:
       file: docker-compose.yml
       service: alertmanager
-    environment:
-      - VIRTUAL_HOST=alertmanager.${DOMAIN}
-      - LETSENCRYPT_HOST=alertmanager.${DOMAIN}
-      - LETSENCRYPT_EMAIL=admin@${DOMAIN}
-      - LETSENCRYPT_TEST=false
-      - HTTPS_METHOD=nohttp
+    ports:
+    - ${ALERTMANAGER_HOST_PORT:-9093}:9093
