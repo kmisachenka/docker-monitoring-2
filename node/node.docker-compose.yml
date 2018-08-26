@@ -1,0 +1,28 @@
+version: '2.1'
+
+services:
+
+  node-nodeexporter:
+    image: prom/node-exporter
+    expose:
+      - 9100
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: none
+
+  node-cadvisor:
+    image: google/cadvisor
+    expose:
+      - 8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: always
+    labels:
+      container_group: monitoring
+    logging:
+      driver: none
